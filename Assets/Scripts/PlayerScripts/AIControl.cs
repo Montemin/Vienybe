@@ -18,8 +18,9 @@ public class AIControl : MonoBehaviour
 
 	// distance to player squared
 	// if less than this AI will stop
-	public float walkThresshold = 2.0f;
-	public float runThresshold = 30.0f;
+  public float retreatThresshold = 20.0f;
+	public float walkThresshold = 30.0f;
+	public float runThresshold = 50.0f;
 
 	private float timeToNextJump = 0;
 
@@ -74,6 +75,8 @@ public class AIControl : MonoBehaviour
 		float distance = distanceToPlayer ();
 		if (distance >= walkThresshold) {
 			v = 1.0f;
+		} else if (distance <= retreatThresshold){
+			v = -1.0f;
 		} else {
 			v = 0.0f;
 		}
