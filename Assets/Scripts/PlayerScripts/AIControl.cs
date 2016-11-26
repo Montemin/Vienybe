@@ -78,7 +78,9 @@ public class AIControl : MonoBehaviour
 			v = 0.0f;
 		}
 
-		if (distance >= runThresshold) {
+		fly = playerControl.fly;
+
+		if (!fly && distance >= runThresshold) {
 			run = true;
 		} else {
 			run = false;
