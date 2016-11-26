@@ -16,6 +16,11 @@ public class AIControl : MonoBehaviour
 	public float jumpHeight = 5.0f;
 	public float jumpCooldown = 1.0f;
 
+	// distance to player squared
+	// if less than this AI will stop
+	public float walkThresshold = 2.0f;
+	public float runThresshold = 30.0f;
+
 	private float timeToNextJump = 0;
 
 	private float speed;
@@ -66,7 +71,19 @@ public class AIControl : MonoBehaviour
 
 	void Update()
 	{
-		v = 1.0f; // Always move
+		float distance = distanceToPlayer ();
+		if (distance >= walkThresshold) {
+			v = 1.0f;
+		} else {
+			v = 0.0f;
+		}
+
+		if (distance >= runThresshold) {
+			run = true;
+		} else {
+			run = false;
+		}
+
 		isMoving = Mathf.Abs(h) > 0.1 || Mathf.Abs(v) > 0.1;
 	}
 
@@ -87,6 +104,12 @@ public class AIControl : MonoBehaviour
 			MovementManagement (h, v, run, sprint);
 			JumpManagement ();
 		}
+	}
+
+	float distanceToPlayer()
+	{
+		Vector3 playerDirection = playerTransform.position - transform.position;
+		return playerDirection.sqrMagnitude;
 	}
 
 	// fly
@@ -147,19 +170,20 @@ public class AIControl : MonoBehaviour
 
 	Vector3 Rotating(float horizontal, float vertical)
 	{
-		Vector3 forward = playerTransform.TransformDirection(Vector3.forward);
-		if (!fly)
-			forward.y = 0.0f;
-		forward = forward.normalized;
+		Vector3 playerDirection = playerTransform.position - transform.position;
 
-		Vector3 right = new Vector3(forward.z, 0, -forward.x);
+		if (!fly)
+			playerDirection.y = 0.0f;
+		playerDirection = playerDirection.normalized;
+
+		Vector3 right = new Vector3(playerDirection.z, 0, -playerDirection.x);
 
 		Vector3 targetDirection;
 
 		float finalTurnSmoothing;
 
 
-		targetDirection = forward * vertical + right * horizontal;
+		targetDirection = playerDirection * vertical + right * horizontal;
 		finalTurnSmoothing = turnSmoothing;
 
 
