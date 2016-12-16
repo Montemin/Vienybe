@@ -53,7 +53,9 @@ public class AIControl : MonoBehaviour
 	void Awake()
 	{
 		anim = GetComponent<Animator> ();
-		playerTransform = playerControl.transform;
+		var player = GameObject.FindGameObjectsWithTag("Player")[0];
+		playerControl = player.GetComponent<PlayerControl>();
+		playerTransform = player.transform;
 
 		speedFloat = Animator.StringToHash("Speed");
 		jumpBool = Animator.StringToHash("Jump");
