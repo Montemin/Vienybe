@@ -18,7 +18,7 @@ public class AIControl : MonoBehaviour
 
 	// distance to player squared
 	// if less than this AI will stop
-  public float retreatThresshold = 20.0f;
+    public float retreatThresshold = 20.0f;
 	public float walkThresshold = 30.0f;
 	public float runThresshold = 50.0f;
 
