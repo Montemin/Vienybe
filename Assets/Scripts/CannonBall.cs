@@ -6,12 +6,19 @@ public class CannonBall : MonoBehaviour {
 	private float explosiveForce = 2.0f;
 	private float explosionRadius = 4.0f;
 	public Transform ragdoll;
+	public ThirdPersonOrbitCam mainCamera;
+
+	void Awake()
+	{
+		mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<ThirdPersonOrbitCam>();
+	}
 
 	void OnCollisionEnter (Collision other)
 	{
-		Debug.Log (other.gameObject.tag);
 		if(other.gameObject.tag == "AI" || isRagdoll(other.gameObject))
 		{
+			mainCamera.ShakeIt ();
+
 			Collider[] colliders = Physics.OverlapSphere (transform.position, explosionRadius);
 			foreach (Collider c in colliders) 
 			{
@@ -24,7 +31,6 @@ public class CannonBall : MonoBehaviour {
 					affectByExplosion(doll.gameObject);
 					Destroy (c.gameObject);
 				} else if (isRagdoll(c.gameObject)) {
-					Debug.Log ("Boom");
 					affectByExplosion (c.gameObject.transform.parent.gameObject);
 				}
 			}

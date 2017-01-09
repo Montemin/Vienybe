@@ -40,6 +40,34 @@ public class ThirdPersonOrbitCam : MonoBehaviour
 	private float defaultFOV;
 	private float targetFOV;
 
+	private float shakeAmount = 0f;
+	public float shakeStrength = 1f;
+	public float shakeCD = 1f;
+	public float myDeltaTime = 1f;
+	private Vector3 shakeToHere;
+
+	public void ShakeIt()
+	{
+		shakeAmount = 1.0f;
+	}
+
+	void Shake()
+	{
+		shakeAmount -= Time.deltaTime;
+
+		if(shakeAmount > 0)
+		{
+			shakeCD += Time.deltaTime;
+
+			if(shakeCD > 0.03f)
+			{
+				shakeToHere = new Vector3(Random.Range(-shakeStrength, shakeStrength) * 2, transform.localRotation.eulerAngles.y + Random.Range(-shakeStrength, shakeStrength), 0);
+				shakeCD = 0;
+			}
+			transform.localRotation = Quaternion.RotateTowards(transform.localRotation, Quaternion.Euler(shakeToHere), myDeltaTime * (50 + shakeStrength * 3));
+		}
+	}
+
 	void Awake()
 	{
 		cam = transform;
@@ -119,6 +147,7 @@ public class ThirdPersonOrbitCam : MonoBehaviour
 
 		cam.position =  player.position + camYRotation * smoothPivotOffset + aimRotation * smoothCamOffset;
 
+		Shake ();
 	}
 
 	// concave objects doesn't detect hit from outside, so cast in both directions
